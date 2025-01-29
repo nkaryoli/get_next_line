@@ -1,9 +1,18 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE 42
-#endif
+// Define el máximo permitido para BUFFER_SIZE
+# ifndef MAX_BUFFER
+# define MAX_BUFFER 1024
+# endif
+
+// Configura BUFFER_SIZE según reglas
+# ifndef BUFFER_SIZE
+# define BUFFER_SIZE 42
+# elif BUFFER_SIZE > MAX_BUFFER
+# undef BUFFER_SIZE
+# define BUFFER_SIZE MAX_BUFFER
+# endif
 
 #include <unistd.h>
 #include <stdio.h>
