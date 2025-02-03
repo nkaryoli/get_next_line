@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: knieves- <knieves-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/01 13:15:55 by knieves-          #+#    #+#             */
-/*   Updated: 2025/02/03 13:15:31 by knieves-         ###   ########.fr       */
+/*   Created: 2025/02/01 21:29:05 by knieves-          #+#    #+#             */
+/*   Updated: 2025/02/03 13:16:48 by knieves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # ifndef MAX_BUFFER
 #  define MAX_BUFFER 1024
@@ -22,6 +22,10 @@
 # elif BUFFER_SIZE > MAX_BUFFER
 #  undef BUFFER_SIZE
 #  define BUFFER_SIZE MAX_BUFFER
+# endif
+
+# ifndef MAX_FD
+#  define MAX_FD 1024
 # endif
 
 # include <unistd.h>

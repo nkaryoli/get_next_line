@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: knieves- <knieves-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/01 12:58:25 by knieves-          #+#    #+#             */
-/*   Updated: 2025/02/03 13:31:18 by knieves-         ###   ########.fr       */
+/*   Created: 2025/02/01 21:27:51 by knieves-          #+#    #+#             */
+/*   Updated: 2025/02/03 13:42:52 by knieves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_free(char **str)
 {
@@ -35,14 +35,17 @@ char	*clean_stash(char *stash)
 	if (stash[i] == '\n')
 		i++;
 	if (!stash[i])
-		return (ft_free(&stash));
+	{
+		free(stash);
+		return (NULL);
+	}
 	new_stash = (char *)malloc((ft_strlen(stash) - i + 1) * sizeof(char));
 	if (!new_stash)
 		return (ft_free(&stash));
 	while (stash[i] != '\0')
 		new_stash[j++] = stash[i++];
 	new_stash[j] = '\0';
-	ft_free(&stash);
+	free(stash);
 	return (new_stash);
 }
 
@@ -92,19 +95,19 @@ char	*read_and_store(int fd, char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char	*stash[MAX_FD];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if ((stash && !ft_strchr(stash, '\n')) || !stash)
-		stash = read_and_store(fd, stash);
-	if (!stash)
+	if ((stash[fd] && !ft_strchr(stash[fd], '\n')) || !stash[fd])
+		stash[fd] = read_and_store(fd, stash[fd]);
+	if (!stash[fd])
 		return (NULL);
-	line = extract_line(stash);
+	line = extract_line(stash[fd]);
 	if (!line)
-		return (ft_free(&stash));
-	stash = clean_stash(stash);
+		return (ft_free(&stash[fd]));
+	stash[fd] = clean_stash(stash[fd]);
 	return (line);
 }
 /*
@@ -117,37 +120,32 @@ void	ft_putendl_fd(char *s, int fd)
 	return ;
 }
 
-int	main(int argc, char *argv[])
+int	main(void)
 {
-	int		fd;
+	int	fd1 = open("text.txt", O_RDONLY);
+	int	fd2 = open("text2.txt", O_RDONLY);
+	int	fd3 = open("text3.txt", O_RDONLY);
 	char	*line;
-    
-	if (argc < 2)
+
+	if (fd1 < 0 || fd2 < 0 || fd3 < 0)
 		return (1);
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
-	{
-		perror("Error opening file");
-		return (1);
-	}
-	line = get_next_line(fd);
-	while (line != NULL)
+	while ((line = get_next_line(fd1)) != NULL)
 	{
 		ft_putendl_fd(line, 1);
 		free(line);
-		line = get_next_line(fd);
 	}
-	if (line == NULL)
-		write(1, "null", 5);
-	close(fd);
-	return (0);
-}
-*/
-/*int	main(void)
-{
-	char	*line;
-
-	line = get_next_line(0);
-	ft_putendl_fd(line, 1);
+	while ((line = get_next_line(fd2)) != NULL)
+	{
+		ft_putendl_fd(line, 1);
+		free(line);
+	}
+	while ((line = get_next_line(fd3)) != NULL)
+	{
+		ft_putendl_fd(line, 1);
+		free(line);
+	}
+	close(fd1);
+	close(fd2);
+	close(fd3);
 	return (0);
 }*/
